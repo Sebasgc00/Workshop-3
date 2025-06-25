@@ -186,6 +186,29 @@ class SistemaEnergia:
         self.spacecraft.comms_status = "Not Working"
         print(f"[{self.spacecraft.model}] TODOS LOS SISTEMAS DESACTIVADOS")
 
+# SUBSYSTEM: Payload system
+
+class CargaUtil:
+    def __init__(self, capacidad_total_kg):
+        self.capacidad_total = capacidad_total_kg
+        self.carga_disponible = capacidad_total_kg
+
+    def liberar_carga(self, cantidad_kg):
+        if cantidad_kg <= 0:
+            print("No se puede liberar carga negativa o cero")
+            return False
+
+        if cantidad_kg > self.carga_disponible:
+            print(f"No hay suficiente carga para liberar: disponible {self.carga_disponible} kg")
+            return False
+
+        self.carga_disponible -= cantidad_kg
+        print(f"Liberados {cantidad_kg} kg de carga. Carga restante: {self.carga_disponible} kg")
+        return True
+
+    def estado_carga(self):
+        return f"Carga disponible: {self.carga_disponible} / {self.capacidad_total} kg"
+
 
 # Eventos aleatorios 
 
