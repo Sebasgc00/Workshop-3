@@ -92,6 +92,35 @@ class SpaceCraft:
         print(f"[{self.model}] POWER STATUS: {P_S}")
         return P_S
 
+
+# SUBSYSTEM: Altitude Control
+
+class AltitudeControlSystem:
+    def __init__(self, spacecraft):
+        self.spacecraft = spacecraft
+
+    def adjust_altitude(self, target_altitude, torque_input, angular_velocity):
+        REQUIRED_POWER = 200
+        print(f"\n[{self.spacecraft.model} - AltitudeControl] Attempting altitude change ")
+
+        if self.spacecraft.available_power < REQUIRED_POWER:
+            return {"status": "Failed", "reason": "Low Power"}
+
+        if not (self.spacecraft.LEO_MIN <= target_altitude <= self.spacecraft.LEO_MAX):
+            return {"status": "Failed", "reason": "Target altitude out of bounds"}
+
+        # Simulate control based on inputs (simple placeholder)
+        adjustment_effectiveness = torque_input * angular_velocity
+
+        if adjustment_effectiveness < 10:
+            return {"status": "Failed", "reason": "Insufficient torque/angular velocity"}
+
+        # Apply adjustment
+        self.spacecraft.altitude_miles = target_altitude
+        self.spacecraft.available_power -= REQUIRED_POWER
+        return {"status": "Success", "new_altitude": target_altitude}
+
+
 # Eventos aleatorios 
 
 class eventosaleatorios:
