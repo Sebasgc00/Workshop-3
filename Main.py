@@ -162,6 +162,29 @@ class CommsSystem:
         else:
             return {"status": "Failed", "reason": "Comms failure"}
 
+# SUBSYSTEM: Energy system
+
+class SistemaEnergia:
+    def __init__(self, spacecraft):
+        self.spacecraft = spacecraft
+        self.energia_origen = "Bateria"
+
+    def evaluar_energia(self):
+        if self.spacecraft.available_power >= SpaceCraft.POWER_MIN:
+            self.energia_origen = "Bateria"
+            print(f"[{self.spacecraft.model}] Energia suficiente: operando con batería")
+        elif 0 < self.spacecraft.available_power < SpaceCraft.POWER_MIN:
+            self.energia_origen = "Panel Solar"
+            print(f"[{self.spacecraft.model}] Energía baja: usando paneles solares")
+            self.desactivar_sistemas()
+        else:
+            print(f"[{self.spacecraft.model}] Falla crítica: sin energía disponible")
+            self.desactivar_sistemas()
+
+    def desactivar_sistemas(self):
+        self.spacecraft.status = "Sistemas desactivados por baja energía"
+        self.spacecraft.comms_status = "Not Working"
+        print(f"[{self.spacecraft.model}] TODOS LOS SISTEMAS DESACTIVADOS")
 
 
 # Eventos aleatorios 
