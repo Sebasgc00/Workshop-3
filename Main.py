@@ -128,3 +128,80 @@ class eventosaleatorios:
                 print("Communication restored")
             else:
                 print("Insufficient power, communication remains disabled")
+
+# Create Spacecrafts
+
+# 1. Satellite with enough power and all systems within range
+SC1 = SpaceCraft("Apolo", rnd.randint(80,1500), rnd.randint(900,12000), "Working", rnd.randint(0,1100))
+
+# 2. Satellite with altitude outside the LEO range
+SC2 = SpaceCraft("Starship", rnd.randint(80,1500), rnd.randint(900,12000), "Working", rnd.randint(0,1100))
+
+# 3. Satellite with payload outside the allowed range
+SC3 = SpaceCraft("Voyager-X", rnd.randint(80,1500), rnd.randint(900,12000), "Working", rnd.randint(0,1100))
+
+# 4. Satellite without sufficient power to operate the payload
+SC4 = SpaceCraft("LowPowerSat",rnd.randint(80,1500), rnd.randint(900,12000), "Working", rnd.randint(0,1100))
+
+# 5. Satellite with damaged communication system
+SC5 = SpaceCraft("MiniSat", rnd.randint(80,1500), rnd.randint(900,12000), "Not Working", rnd.randint(0,1100))
+
+
+# Reports subsystems
+SpaceCrafts= [SC1, SC2, SC3, SC4, SC5]
+
+def execute(list):
+    for i in list:
+
+        i.report_status()
+
+        print("\n--- GENERAL OPERATIONS ---")
+
+        i.control_altitude_miles(rnd.randint(0, 1000))
+        i.power_system()
+        i.operate_payload()
+        i.send_data() 
+
+        print("\n--- ALTITUDE OPERATIONS ---")
+
+        altitude_system = AltitudeControlSystem(i)
+        result =altitude_system.adjust_altitude(target_altitude=rnd.randint(0,500),torque_input=rnd.randint(1,10), angular_velocity=rnd.randint(1,5))
+        print("\n Altitude Adjustment   Result:", result)
+
+        print("\n--- COMMS OPERATIONS ---")
+
+        comms_system = CommsSystem(i)
+        command_result = comms_system.send_command("Activate Camera")
+        payload_result = comms_system.transmit_payload()
+        telemetry_result = comms_system.send_telemetry()
+
+        print("\n Command Result:", command_result)
+        print("Payload Transmission:", payload_result)
+        print("Telemetry:", telemetry_result)
+
+        print("\n--- ENERGY OPERATION ---")
+
+        sistema_energia = SistemaEnergia(i)
+        sistema_energia.evaluar_energia()
+        i.report_status()
+
+        print("\n--- CHARGE OPERATION ---")
+
+        carga = CargaUtil(rnd.randint(0,10000))
+        print(carga.estado_carga())
+        carga.liberar_carga(1000)
+        print(carga.estado_carga())
+        carga.liberar_carga(4500)  # Intento fallido, no hay suficiente
+        print(carga.estado_carga())
+
+
+        print("\n--- ALEATORY EVENTS ---")
+
+        evento = eventosaleatorios(i)
+        evento.eclipse_solar()
+        print("\n" + "-"*50 + "\n")
+
+
+        
+
+execute(SpaceCrafts)
