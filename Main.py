@@ -120,6 +120,49 @@ class AltitudeControlSystem:
         self.spacecraft.available_power -= REQUIRED_POWER
         return {"status": "Success", "new_altitude": target_altitude}
 
+# SUBSYSTEM: Communication System
+
+class CommsSystem:
+    def __init__(self, spacecraft):
+        self.spacecraft = spacecraft
+        self.payload_data = "Payload data stream"
+
+        # Generalized telemetry as a placeholder dictionary
+        self.telemetry = {
+            "sensor_1": "value_1",
+            "sensor_2": "value_2",
+            "status_flag": "OK"
+        }
+
+    def send_command(self, command):
+        if self.spacecraft.available_power < 100:
+            return {"status": "Failed", "reason": "Insufficient Power"}
+
+        if self.spacecraft.comms_status != "Working":
+            return {"status": "Failed", "reason": "Comms not working"}
+
+        self.spacecraft.available_power -= 100
+        return {"status": "Command Executed", "command": command}
+
+    def transmit_payload(self):
+        if self.spacecraft.comms_status == "Working":
+            return {"status": "Data Sent", "payload": self.payload_data}
+        else:
+            return {"status": "Failed", "reason": "Comms not working"}
+
+    def send_telemetry(self):
+        if self.spacecraft.comms_status == "Working":
+            # Simulate changing telemetry values for general use
+            self.telemetry = {
+                "sensor_1": rnd.choice(["nominal", "high", "low"]),
+                "sensor_2": rnd.randint(0, 100),
+                "status_flag": rnd.choice(["OK", "WARNING", "FAIL"])
+            }
+            return {"status": "Telemetry Sent", "data": self.telemetry}
+        else:
+            return {"status": "Failed", "reason": "Comms failure"}
+
+
 
 # Eventos aleatorios 
 
