@@ -91,3 +91,40 @@ class SpaceCraft:
             P_S = "FAILURE IN DATA"
         print(f"[{self.model}] POWER STATUS: {P_S}")
         return P_S
+
+# Eventos aleatorios 
+
+class eventosaleatorios:
+        def __init__(self, SpaceCraft):
+            self.SpaceCraft = SpaceCraft
+            self.sistema_alterno_activo = False
+        def eclipse_solar(self):
+            print("Solar energy lost for eclipse")
+            energia_actual = int(self.SpaceCraft.available_power)
+            energia_reducida =max(0, energia_actual - 300)
+            self.SpaceCraft.available_power = (energia_reducida)
+            print(f"Energy reduced to {self.SpaceCraft.available_power} W")
+
+# Estado del sistema de comunicacion
+            if energia_reducida >= 800:
+                self.SpaceCraft.comms = "Working"
+                print("Comms: Working")
+            elif energia_reducida < 800:
+                print("Alert: Comms disable")
+
+            if energia_reducida < 800 and not self.sistema_alterno_activo:
+                self.activar_sistema_alterno()
+
+        def activar_sistema_alterno(self):
+            print(f"Activating alternate energy system of {self.SpaceCraft.model}")
+            energia_extra = 200  # Cantidad de energía que aporta el sistema alterno
+            self.SpaceCraft.available_power += energia_extra
+            self.sistema_alterno_activo = True
+            print(f"Power restored to {self.SpaceCraft.available_power} W")
+
+        # Actualizar estado de comunicación después de activar sistema alterno
+            if self.SpaceCraft.available_power >= 800:
+                self.SpaceCraft.comms = "Working"
+                print("Communication restored")
+            else:
+                print("Insufficient power, communication remains disabled")
